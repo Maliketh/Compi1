@@ -3,205 +3,231 @@
 #include <iostream>
 #include <string>
 
-#define MAX_STRING_LEN 
+#define MAX_STRING_LEN 1024
 
 
 /* =========  Helper function - in the feuture maybe move to a new file   =========*/
 
-/* lexeme is the value of the token.
-   yylineno is a global variable provided by Flex  that keeps track of the current line number being processed in the input stream. */
-void printToken (const char* name, const char* lexeme ) 
-{
-    std::cout << yylineno << " " << name << " " << lexeme << std::endl;
-}
+/*
+Reminder:
+   yylineno is a global variable provided by Flex  that keeps track of the current line number being processed in the input stream.
+   yyleng represents the number of characters in the current match, excluding the null terminator.
+   yytext is a global variable provided by Flex that contains the text of the current token that was matched by the lexer.
+   It points to a null-terminated string representing the input that corresponds to the pattern in your Flex rules
+*/
 
-/* yyleng represents the number of characters in the current match, excluding the null terminator.*/
-void printString ()
+void printString()
 {
     std::string output = "";
 
     /* Skip the first and last index to avoid  "" */
     for (int i = 1; i < yyleng - 1; i++)
     {
-        if (yytext[i] == '\\') 
+        if (output.size() > MAX_STRING_LEN)
+        {
+            //scream something
+        }
+        if (yytext[i] == '\\')
         {
             char cur_char = yytest[++i];
 
             switch (cur_char)
             {
-                case 'n':
-                    output.pushback ('\n');
-                    break;
+            case 'n':
+                output.pushback('\n');
+                break;
 
-                case 'r':
-                    output.pushback('\r');
-                    break;
+            case 'r':
+                output.pushback('\r');
+                break;
 
-                case 't':
-                    output.pushback('\t');
-                    break;
+            case 't':
+                output.pushback('\t');
+                break;
 
-                case '\\':
-                    output.pushback('\\');
-                    break;
+            case '\\':
+                output.pushback('\\');
+                break;
 
-                case '"':
-                    output.pushback('\"');
-                    break;
+            case '"':
+                output.pushback('\"');
+                break;
 
-                case 'x':
-                    std::string ascii_val "";
-                    ascii_val.append (&yytext[++i], 2);
-                    int hexValue = std::stoi (ascii_val.lower(), nullptr, 16);
-                    char val  = static_cast<char> (hexValue);
-                    output.pushback (val);
-                    i++;
+            case 'x':
+                std::string ascii_val "";
+                ascii_val.append(&yytext[++i], 2);
+                int hexValue = std::stoi(ascii_val, nullptr, 16);
+                if (hexValue < 0 || hexValue > 255)
+                {
+                    output::errorUndefinedEscape(ascii_val);
+                    return;
+                }
+                char val = static_cast<char> (hexValue);
+                output.pushback(val);
+                i++;
+                break;
+
+            default:
+                //error - NOT SURE WHICH ONE PROBABLY DEBUG,
+                break;
+
 
             }
 
         }
-        else 
+        else
         {
-            output.pushback (yytext[i]);
+            output.pushback(yytext[i]);
         }
     }
 
-    std::cout << yylineno << " " << "STRING" << " " << output << std::endl;
+    output::printToken(yylineno, "STRING", output);
 }
 
 
 
 /* ==========================  End of helper functions   ==========================*/
 
-/* yytext is a global variable provided by Flex that contains the text of the current token that was matched by the lexer.
-   It points to a null-terminated string representing the input that corresponds to the pattern in your Flex rules.*/
+
 
 int main() {
     enum tokentype token;
 
     // read tokens until the end of file is reached
-    while ((token = static_cast<tokentype>(yylex()))) 
+    while ((token = static_cast<tokentype>(yylex())))
     {
         switch (token)
         {
-            case VOID:
-                printToken ("VOID", yytext);
-                break;
+        case VOID:
+            output::printToken(yylineno, "VOID", yytext);
+            break;
 
-            case INT:
-                printToken ("INT", yytext);
-                break;
+        case INT:
+            output::printToken(yylineno, "INT", yytext);
+            break;
 
-            case BYTE:
-                printToken ("BYTE", yytext);
-                break;
+        case BYTE:
+            output::printToken(yylineno, "BYTE", yytext);
+            break;
 
-            case BOOL:
-                printToken ("BOOL", yytext);
-                break;
+        case BOOL:
+            output::printToken(yylineno, "BOOL", yytext);
+            break;
 
-            case AND:
-                printToken ("AND", yytext);
-                break;
+        case AND:
+            output::printToken(yylineno, "AND", yytext);
+            break;
 
-            case OR:
-                printToken ("OR", yytext);
-                break;
+        case OR:
+            output::printToken(yylineno, "OR", yytext);
+            break;
 
-            case NOT:
-                printToken ("NOT", yytext);
-                break;
+        case NOT:
+            output::printToken(yylineno, "NOT", yytext);
+            break;
 
-            case TRUE:
-                printToken ("TRUE", yytext);
-                break;
+        case TRUE:
+            output::printToken(yylineno, "TRUE", yytext);
+            break;
 
-            case FALSE:
-                printToken ("FALSE", yytext);
-                break;
+        case FALSE:
+            output::printToken(yylineno, "FALSE", yytext);
+            break;
 
-            case RETURN:
-                printToken ("RETURN", yytext);
-                break;
+        case RETURN:
+            output::printToken(yylineno, "RETURN", yytext);
+            break;
 
-            case IF:
-                printToken ("IF", yytext);
-                break;
+        case IF:
+            output::printToken(yylineno, "IF", yytext);
+            break;
 
-            case ELSE:
-                printToken ("ELSE", yytext);
-                break;
+        case ELSE:
+            output::printToken(yylineno, "ELSE", yytext);
+            break;
 
-            case WHILE:
-                printToken ("WHILE", yytext);
-                break;
+        case WHILE:
+            output::printToken(yylineno, "WHILE", yytext);
+            break;
 
-            case BREAK:
-                printToken ("BREAK", yytext);
-                break;
+        case BREAK:
+            output::printToken(yylineno, "BREAK", yytext);
+            break;
 
 
-            case CONTINUE:
-                printToken ("CONTINUE", yytext);
-                break;
+        case CONTINUE:
+            output::printToken(yylineno, "CONTINUE", yytext);
+            break;
 
-            case SC:
-                printToken ("SC", yytext);
-                break;
+        case SC:
+            output::printToken(yylineno, "SC", yytext);
+            break;
 
-            case COMMA:
-                printToken ("COMMA", yytext);
-                break;
+        case COMMA:
+            output::printToken(yylineno, "COMMA", yytext);
+            break;
 
-            case LPAREN:
-                printToken ("LPAREN", yytext);
-                break;
+        case LPAREN:
+            output::printToken(yylineno, "LPAREN", yytext);
+            break;
 
-            case RPAREN:
-                printToken ("RPAREN", yytext);
-                break;
+        case RPAREN:
+            output::printToken(yylineno, "RPAREN", yytext);
+            break;
 
-            case LBRACE:
-                printToken ("LBRACE", yytext);
-                break;
+        case LBRACE:
+            output::printToken(yylineno, "LBRACE", yytext);
+            break;
 
-            case RBRACE:
-                printToken ("RBRACE", yytext);
-                break;
+        case RBRACE:
+            output::printToken(yylineno, "RBRACE", yytext);
+            break;
 
-            case ASSIGN:
-                printToken ("ASSIGN", yytext);
-                break;
+        case ASSIGN:
+            output::printToken(yylineno, "ASSIGN", yytext);
+            break;
 
-            case RELOP:
-                printToken ("RELOP", yytext);
-                break;
+        case RELOP:
+            output::printToken(yylineno, "RELOP", yytext);
+            break;
 
-            case BINOP:
-                printToken ("BINOP", yytext);
-                break;
+        case BINOP:
+            output::printToken(yylineno, "BINOP", yytext);
+            break;
 
-            case COMMENT:
-                printToken ("COMMENT", yytext);
-                break;
+        case COMMENT:
+            output::printToken(yylineno, "COMMENT", yytext);
+            break;
 
-            case ID:
-                printToken ("ID", yytext);
-                break;
+        case ID:
+            output::printToken(yylineno, "ID", yytext);
+            break;
 
-            case NUM:
-                printToken ("NUM", yytext);
-                break;
+        case NUM:
+            output::printToken(yylineno, "NUM", yytext);
+            break;
 
-            case NUM_B:
-                printToken ("NUM_B", yytext);
-                break;
+        case NUM_B:
+            output::printToken(yylineno, "NUM_B", yytext);
+            break;
 
-            case STRING:
-                printString ();
-                break;
+        case STRING:
+            printString();
+            break;
 
             /* Handling Errors */
+        case ERR_UNCLOSED_STR:
+            errorUnclosedString();
+            break;
+
+        case ERR_GENERAL:
+            errorUnknownChar(CHAR);  //HOW TO GET THE CHAR??
+            break;
+
+        case ERR_UNDEFINED_ESC: //maybe handle in printString?
+            printString();
+            break;
+
 
         }
     }

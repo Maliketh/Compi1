@@ -30,11 +30,15 @@ enum tokentype {
     ID,
     NUM,
     NUM_B,
-    STRING
+    STRING,
+    /* Errors :) */
+    ERR_UNCLOSED_STR,    /* errorUnclosedString */
+    ERR_UNDEFINED_ESC,   /* errorUndefEscape    */
+    ERR_GENERAL          /* errorUnknownChar    */
 };
 
 extern int yylineno;
-extern char *yytext;
+extern char* yytext;
 extern int yyleng;
 
 extern int yylex();
