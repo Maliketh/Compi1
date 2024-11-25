@@ -14,7 +14,7 @@ print_char           [!#-\[\]-~]
 ascii               (\\x[0-7][0-9a-fA-F])
 escape_seq          (\\[ntr\"\\0])
 
-string              ({print_char}| {ascii} |{escape_sequence})
+string              ({print_char}| {ascii} |{escape_seq})
 
 illegal_char       ([\x00-\x09\x0b\x0c\x0e-\x1f]|\x7f)
 
