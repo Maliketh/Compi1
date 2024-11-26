@@ -16,6 +16,30 @@ Reminder:
    It points to a null-terminated string representing the input that corresponds to the pattern in your Flex rules
 */
 
+int convertCharToInt (char c)
+{
+    int res = -1;
+    if (c >= '0' && c <= '9')
+        res =  (int)(c - '0');
+    else if (c >= 'A' && c <= 'F')
+        res =  (int)(c - 'A' + 10);
+    else if (c >= 'a' && c <= 'f')
+        res = (int)(c - 'a' + 10);
+    return res;
+}
+
+int convertStringToInt (const std::string& s)
+{
+    int res = -1;
+    int n1 = convertCharToInt(s[0]) * 16;
+    int n2 = convertCharToInt(s[1]);
+    if (n1 >= 0 && n2 >= 0)
+        res = n1+n2;
+    return res;
+
+
+}
+
 void printString()
 {
     std::string output = "";
@@ -47,13 +71,30 @@ void printString()
                 case '"':
                     output.push_back('\"');
                     break;
-                case 'x': {
+                case 'x':
+                {
+                    if(i == yyleng)
+                    {
+                        std::string s = "x";
+                        output::errorUndefinedEscape(s.c_str());
+                        exit(0);
+                    }
+
+                    if(i == yyleng - 1)
+                    {
+                        std::string s = "x";
+                        s.append(&yytext[i], 1);
+                        output::errorUndefinedEscape(s.c_str());
+                        exit(0);
+                    }
                     std::string ascii_val = "";
                     ascii_val.append(&yytext[++i], 2);
-                    int hexValue = std::stoi(ascii_val, nullptr, 16);
-                    if (hexValue < 0 || hexValue > 255) {
-                        std::cout << " index " << i <<std::endl;
-                        output::errorUndefinedEscape(ascii_val.c_str());
+
+                    int hexValue = convertStringToInt (ascii_val);
+                    if (hexValue < 0 || hexValue > 255)
+                    {
+                        std::string s = "x" + ascii_val;
+                        output::errorUndefinedEscape(s.c_str());
                         exit(0);
                     }
                     char val = static_cast<char> (hexValue);
@@ -63,7 +104,7 @@ void printString()
                 }
                 default: {
                     std::string illigeal_let = "";
-                    illigeal_let.append(&yytext[++i], 1);
+                    illigeal_let.append(&yytext[i], 1);
                     output::errorUndefinedEscape(illigeal_let.c_str());
                     exit(0);
                     break;
