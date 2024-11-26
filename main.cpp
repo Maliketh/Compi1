@@ -105,7 +105,7 @@ void printString()
                     ascii_val.append(&yytext[++i], 2);
 
                     int hexValue = convertStringToInt (ascii_val);
-                    if (hexValue < 0 || hexValue > 255)
+                    if (hexValue < 32 || hexValue > 126)
                     {
                         std::string s = "x" + ascii_val;
                         output::errorUndefinedEscape(s.c_str());
