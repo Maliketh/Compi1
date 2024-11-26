@@ -31,49 +31,43 @@ void printString()
         {
             char cur_char = yytext[++i];
 
-            switch (cur_char)
-            {
-            case 'n':
-                output.push_back('\n');
-                break;
-
-            case 'r':
-                output.push_back('\r');
-                break;
-
-            case 't':
-                output.push_back('\t');
-                break;
-
-            case '\\':
-                output.push_back('\\');
-                break;
-
-            case '"':
-                output.push_back('\"');
-                break;
-
-            case 'x':
-                std::string ascii_val = "";
-                ascii_val.append(&yytext[++i], 2);
-                int hexValue = std::stoi(ascii_val, nullptr, 16);
-                if (hexValue < 0 || hexValue > 255)
-                {
-                    output::errorUndefinedEscape(ascii_val.c_str());
-                    exit(0);
+            switch (cur_char) {
+                case 'n':
+                    output.push_back('\n');
+                    break;
+                case 'r':
+                    output.push_back('\r');
+                    break;
+                case 't':
+                    output.push_back('\t');
+                    break;
+                case '\\':
+                    output.push_back('\\');
+                    break;
+                case '"':
+                    output.push_back('\"');
+                    break;
+                case 'x': {
+                    std::string ascii_val = "";
+                    ascii_val.append(&yytext[++i], 2);
+                    int hexValue = std::stoi(ascii_val, nullptr, 16);
+                    if (hexValue < 0 || hexValue > 255) {
+                        output::errorUndefinedEscape(ascii_val.c_str());
+                        exit(0);
+                    }
+                    char val = static_cast<char> (hexValue);
+                    output.push_back(val);
+                    i++;
+                    break;
                 }
-                char val = static_cast<char> (hexValue);
-                output.push_back(val);
-                i++;
-                break;
-
-           // default:
-                //error - NOT SURE WHICH ONE PROBABLY DEBUG,
-               // break;
-
-
+                default: {
+                    std::string illigeal_let = "";
+                    illigeal_let.append(&yytext[++i], 1);
+                    output::errorUndefinedEscape(illigeal_let.c_str());
+                    exit(0);
+                    break;
+                }
             }
-
         }
         else
         {
@@ -89,7 +83,8 @@ bool isIllegal(char c) {
            (uc == 0x0b) ||               // \x0b
            (uc == 0x0c) ||               // \x0c
            (0x0e <= uc && uc <= 0x1f) || // \x0e-\x1f
-           (uc == 0x7f);                 // \x7f (DEL)
+           (uc == 0x7f) ||                 // \x7f (DEL)
+           (uc == 0x40)   ;             // @ symbol
 }
 
 void char_error()
