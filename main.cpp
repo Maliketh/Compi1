@@ -83,14 +83,21 @@ void printString()
 
     output::printToken(yylineno, STRING, output.c_str());
 }
+bool isIllegal(char c) {
+    unsigned char uc = static_cast<unsigned char>(c);
+    return (uc <= 0x09) ||                // \x00-\x09
+           (uc == 0x0b) ||               // \x0b
+           (uc == 0x0c) ||               // \x0c
+           (0x0e <= uc && uc <= 0x1f) || // \x0e-\x1f
+           (uc == 0x7f);                 // \x7f (DEL)
+}
 
 void char_error()
 {
     int i = 0;
     while (yytext[i])
     {
-        if ( (!(int(yytext[i]) >= int(0x20) && int(yytext[i]) <= int(0x7E))) ||
-                    int(yytext[i]) == int(0x7f))
+        if ( isIllegal (yytext[i]))
         {
             output::errorUnknownChar(yytext[i]);
             exit(0);
