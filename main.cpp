@@ -52,6 +52,7 @@ void printString()
                     ascii_val.append(&yytext[++i], 2);
                     int hexValue = std::stoi(ascii_val, nullptr, 16);
                     if (hexValue < 0 || hexValue > 255) {
+                        std::cout << " index " << i <<std::endl;
                         output::errorUndefinedEscape(ascii_val.c_str());
                         exit(0);
                     }
@@ -77,14 +78,21 @@ void printString()
 
     output::printToken(yylineno, STRING, output.c_str());
 }
-bool isIllegal(char c) {
+bool isIllegal(char c)
+{
     unsigned char uc = static_cast<unsigned char>(c);
+    bool is_legal = (uc >= 0x20 && uc<= 0x7E) ||
+                     c == '\t' ||
+                     c == '\r' ||
+                     c == '\n';
+    return !is_legal;
+    /*unsigned char uc = static_cast<unsigned char>(c);
     return (uc <= 0x09) ||                // \x00-\x09
            (uc == 0x0b) ||               // \x0b
            (uc == 0x0c) ||               // \x0c
            (0x0e <= uc && uc <= 0x1f) || // \x0e-\x1f
            (uc == 0x7f) ||                 // \x7f (DEL)
-           (uc == 0x40)   ;             // @ symbol
+           (uc == 0x40)   ;             // @ symbol*/
 }
 
 void char_error()
@@ -238,8 +246,9 @@ int main() {
             break;
 
         case ERR_GENERAL:
-            char_error(); //HOW TO GET THE CHAR??
-            break;
+            output::errorUnknownChar(yytext[0]);
+                exit(0);
+                break;
 
         case ERR_UNDEFINED_ESC: //maybe handle in printString?
             printString();

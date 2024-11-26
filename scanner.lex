@@ -5,7 +5,7 @@
 %option yylineno
 %option noyywrap
 
-whitespace           [\t\n\r]
+whitespace           [ \t\n\r]
 
 
 illegal_char       ([\x00-\x09\x0b\x0c\x0e-\x1f]|\x7f)
