@@ -51,9 +51,15 @@ void printString()
         {
             //scream something
         }
-        if (yytext[i] == '\n')
+        if (yytext[i] == '\n' || yytext[i] == '\r'  )
         {
             output::errorUnclosedString();
+            exit(0);
+            break;
+        }
+        if (yytext[i] == '\"'  )
+        {
+            output::errorUnknownChar(yytext[i]);
             exit(0);
             break;
         }

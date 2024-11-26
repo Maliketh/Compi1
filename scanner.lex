@@ -46,7 +46,7 @@ continue                return CONTINUE;
 (0|[1-9][0-9]*)         return NUM;      //Checked
 (0|[1-9][0-9]*)+b       return NUM_B;    //Checked
 
-\"[^\"]*\"             return STRING;             //Checked
+\"[^(\")]*\"              return STRING;             //Checked
 
 {whitespace}            ; /* ignore whitespace */
 .                       return ERR_GENERAL;
