@@ -60,7 +60,7 @@ void printString()
                 if (hexValue < 0 || hexValue > 255)
                 {
                     output::errorUndefinedEscape(ascii_val);
-                    return;
+                    exit(0);
                 }
                 char val = static_cast<char> (hexValue);
                 output.pushback(val);
@@ -84,6 +84,19 @@ void printString()
     output::printToken(yylineno, "STRING", output);
 }
 
+void char_error()
+{
+    int i = 0;
+    while (yytext[i])
+    {
+        if (!((yytext[i] >= 0x20 && yytext[i] <= 0x7E)) 
+        {
+            errorUnknownChar(yytext[i]);
+            exit(0);
+        }
+        i++;
+    }
+}
 
 
 /* ==========================  End of helper functions   ==========================*/
@@ -218,16 +231,16 @@ int main() {
             /* Handling Errors */
         case ERR_UNCLOSED_STR:
             errorUnclosedString();
+            exit(0);
             break;
 
         case ERR_GENERAL:
-            errorUnknownChar(CHAR);  //HOW TO GET THE CHAR??
+            char_error(); //HOW TO GET THE CHAR??
             break;
 
         case ERR_UNDEFINED_ESC: //maybe handle in printString?
             printString();
             break;
-
 
         }
     }
