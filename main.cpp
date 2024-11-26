@@ -89,7 +89,9 @@ void char_error()
     int i = 0;
     while (yytext[i])
     {
-        if (!((yytext[i] >= 0x20 && yytext[i] <= 0x7E)) 
+        if (!((int(yytext[i]) >= int(0x20) &&
+               int(yytext[i]) <= int(0x7E) && 
+               int(yytext[i]) != int(0x7f))
         {
             errorUnknownChar(yytext[i]);
             exit(0);
