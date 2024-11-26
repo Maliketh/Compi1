@@ -8,7 +8,7 @@
 whitespace           [ \t\n\r]
 
 
-illegal_char       ([\x00-\x09\x0b\x0c\x0e-\x1f]|\x7f)
+
 illegal_string      ({string}|{illegal_escape}|{illegal_chars})
 
 %%
@@ -50,8 +50,9 @@ continue                return CONTINUE;
 
 {whitespace}            ; /* ignore whitespace */
 .                       return ERR_GENERAL;
-illegal_char            return ERR_GENERAL;
+
 \"[^\"]*                return ERR_UNCLOSED_STR;   //Checked
+"([^"\\]*(\\.[^"\\]*)*  return ERR_UNCLOSED_STR;
 
 
 
