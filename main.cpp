@@ -89,9 +89,8 @@ void char_error()
     int i = 0;
     while (yytext[i])
     {
-        if (!((int(yytext[i]) >= int(0x20) &&
-               int(yytext[i]) <= int(0x7E) && 
-               int(yytext[i]) != int(0x7f))))
+        if ( (!(int(yytext[i]) >= int(0x20) && int(yytext[i]) <= int(0x7E))) ||
+                    int(yytext[i]) == int(0x7f))
         {
             output::errorUnknownChar(yytext[i]);
             exit(0);
