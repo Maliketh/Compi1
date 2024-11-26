@@ -73,20 +73,28 @@ void printString()
                     break;
                 case 'x':
                 {
-                    if(i == yyleng)
+                    if(i == yyleng-1)
                     {
-                        std::string s = "x";
+                        std::string s = "111";
                         output::errorUndefinedEscape(s.c_str());
                         exit(0);
                     }
 
-                    if(i == yyleng - 1)
+                    if(i == yyleng - 2)
                     {
                         std::string s = "x";
-                        s.append(&yytext[i], 1);
+                        //s.append(&yytext[i], 1);
                         output::errorUndefinedEscape(s.c_str());
                         exit(0);
                     }
+                    if(i == yyleng - 3)
+                    {
+                        std::string s = "x";
+                        s.append(&yytext[++i], 1);
+                        output::errorUndefinedEscape(s.c_str());
+                        exit(0);
+                    }
+
                     std::string ascii_val = "";
                     ascii_val.append(&yytext[++i], 2);
 
