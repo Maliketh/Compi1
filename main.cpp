@@ -51,7 +51,13 @@ void printString()
         {
             //scream something
         }
-        if (yytext[i] == '\\')
+        if (yytext[i] == '\n')
+        {
+            output::errorUnclosedString();
+            exit(0);
+            break;
+        }
+        else if (yytext[i] == '\\')
         {
             char cur_char = yytext[++i];
 
@@ -119,6 +125,7 @@ void printString()
                 }
             }
         }
+
         else
         {
             output.push_back(yytext[i]);
