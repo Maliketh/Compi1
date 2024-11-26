@@ -29,47 +29,47 @@ void printString()
         }
         if (yytext[i] == '\\')
         {
-            char cur_char = yytest[++i];
+            char cur_char = yytext[++i];
 
             switch (cur_char)
             {
             case 'n':
-                output.pushback('\n');
+                output.push_back('\n');
                 break;
 
             case 'r':
-                output.pushback('\r');
+                output.push_back('\r');
                 break;
 
             case 't':
-                output.pushback('\t');
+                output.push_back('\t');
                 break;
 
             case '\\':
-                output.pushback('\\');
+                output.push_back('\\');
                 break;
 
             case '"':
-                output.pushback('\"');
+                output.push_back('\"');
                 break;
 
             case 'x':
-                std::string ascii_val "";
+                std::string ascii_val = "";
                 ascii_val.append(&yytext[++i], 2);
                 int hexValue = std::stoi(ascii_val, nullptr, 16);
                 if (hexValue < 0 || hexValue > 255)
                 {
-                    output::errorUndefinedEscape(ascii_val);
+                    output::errorUndefinedEscape(ascii_val.c_str());
                     exit(0);
                 }
                 char val = static_cast<char> (hexValue);
-                output.pushback(val);
+                output.push_back(val);
                 i++;
                 break;
 
-            default:
+           // default:
                 //error - NOT SURE WHICH ONE PROBABLY DEBUG,
-                break;
+               // break;
 
 
             }
@@ -77,11 +77,11 @@ void printString()
         }
         else
         {
-            output.pushback(yytext[i]);
+            output.push_back(yytext[i]);
         }
     }
 
-    output::printToken(yylineno, "STRING", output);
+    output::printToken(yylineno, STRING, output.c_str());
 }
 
 void char_error()
@@ -91,9 +91,9 @@ void char_error()
     {
         if (!((int(yytext[i]) >= int(0x20) &&
                int(yytext[i]) <= int(0x7E) && 
-               int(yytext[i]) != int(0x7f))
+               int(yytext[i]) != int(0x7f))))
         {
-            errorUnknownChar(yytext[i]);
+            output::errorUnknownChar(yytext[i]);
             exit(0);
         }
         i++;
@@ -114,116 +114,116 @@ int main() {
         switch (token)
         {
         case VOID:
-            output::printToken(yylineno, "VOID", yytext);
+            output::printToken(yylineno, VOID, yytext);
             break;
 
         case INT:
-            output::printToken(yylineno, "INT", yytext);
+            output::printToken(yylineno, INT, yytext);
             break;
 
         case BYTE:
-            output::printToken(yylineno, "BYTE", yytext);
+            output::printToken(yylineno, BYTE, yytext);
             break;
 
         case BOOL:
-            output::printToken(yylineno, "BOOL", yytext);
+            output::printToken(yylineno, BOOL, yytext);
             break;
 
         case AND:
-            output::printToken(yylineno, "AND", yytext);
+            output::printToken(yylineno, AND, yytext);
             break;
 
         case OR:
-            output::printToken(yylineno, "OR", yytext);
+            output::printToken(yylineno, OR, yytext);
             break;
 
         case NOT:
-            output::printToken(yylineno, "NOT", yytext);
+            output::printToken(yylineno, NOT, yytext);
             break;
 
         case TRUE:
-            output::printToken(yylineno, "TRUE", yytext);
+            output::printToken(yylineno, TRUE, yytext);
             break;
 
         case FALSE:
-            output::printToken(yylineno, "FALSE", yytext);
+            output::printToken(yylineno, FALSE, yytext);
             break;
 
         case RETURN:
-            output::printToken(yylineno, "RETURN", yytext);
+            output::printToken(yylineno, RETURN, yytext);
             break;
 
         case IF:
-            output::printToken(yylineno, "IF", yytext);
+            output::printToken(yylineno, IF, yytext);
             break;
 
         case ELSE:
-            output::printToken(yylineno, "ELSE", yytext);
+            output::printToken(yylineno, ELSE, yytext);
             break;
 
         case WHILE:
-            output::printToken(yylineno, "WHILE", yytext);
+            output::printToken(yylineno, WHILE, yytext);
             break;
 
         case BREAK:
-            output::printToken(yylineno, "BREAK", yytext);
+            output::printToken(yylineno, BREAK, yytext);
             break;
 
 
         case CONTINUE:
-            output::printToken(yylineno, "CONTINUE", yytext);
+            output::printToken(yylineno, CONTINUE, yytext);
             break;
 
         case SC:
-            output::printToken(yylineno, "SC", yytext);
+            output::printToken(yylineno, SC, yytext);
             break;
 
         case COMMA:
-            output::printToken(yylineno, "COMMA", yytext);
+            output::printToken(yylineno, COMMA, yytext);
             break;
 
         case LPAREN:
-            output::printToken(yylineno, "LPAREN", yytext);
+            output::printToken(yylineno, LPAREN, yytext);
             break;
 
         case RPAREN:
-            output::printToken(yylineno, "RPAREN", yytext);
+            output::printToken(yylineno, RPAREN, yytext);
             break;
 
         case LBRACE:
-            output::printToken(yylineno, "LBRACE", yytext);
+            output::printToken(yylineno, LBRACE, yytext);
             break;
 
         case RBRACE:
-            output::printToken(yylineno, "RBRACE", yytext);
+            output::printToken(yylineno, RBRACE, yytext);
             break;
 
         case ASSIGN:
-            output::printToken(yylineno, "ASSIGN", yytext);
+            output::printToken(yylineno, ASSIGN, yytext);
             break;
 
         case RELOP:
-            output::printToken(yylineno, "RELOP", yytext);
+            output::printToken(yylineno, RELOP, yytext);
             break;
 
         case BINOP:
-            output::printToken(yylineno, "BINOP", yytext);
+            output::printToken(yylineno, BINOP, yytext);
             break;
 
         case COMMENT:
-            output::printToken(yylineno, "COMMENT", yytext);
+            output::printToken(yylineno, COMMENT, yytext);
             break;
 
         case ID:
-            output::printToken(yylineno, "ID", yytext);
+            output::printToken(yylineno, ID, yytext);
             break;
 
         case NUM:
-            output::printToken(yylineno, "NUM", yytext);
+            output::printToken(yylineno, NUM, yytext);
             break;
 
         case NUM_B:
-            output::printToken(yylineno, "NUM_B", yytext);
+            output::printToken(yylineno, NUM_B, yytext);
             break;
 
         case STRING:
@@ -232,7 +232,7 @@ int main() {
 
             /* Handling Errors */
         case ERR_UNCLOSED_STR:
-            errorUnclosedString();
+            output::errorUnclosedString();
             exit(0);
             break;
 
