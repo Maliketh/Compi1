@@ -65,11 +65,7 @@ void printString()
         }
         else if (yytext[i] == '\\')
         {
-            if (i == yyleng-1)
-            {
-                output::errorUnclosedString();
-                exit(0);
-            }
+
             char cur_char = yytext[++i];
 
             switch (cur_char) {
@@ -87,6 +83,11 @@ void printString()
                     break;
                 case '"':
                     output.push_back('\"');
+                    if ( i ==  yyleng - 1)
+                    {
+                        output::errorUnclosedString();
+                        exit(0);
+                    }
                     break;
 
                 case '0':
