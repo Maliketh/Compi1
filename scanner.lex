@@ -38,21 +38,22 @@ continue                return CONTINUE;
 \}                      return RBRACE;
 =                       return ASSIGN;
 
-(==|!=|<|>|<=|>=)      return RELOP;     //Checked
-[\+\-\*\/]             return BINOP;     //Checked
+(==|!=|<|>|<=|>=)      return RELOP;
+[\+\-\*\/]             return BINOP;
 
-\/\/[^\n\r]*           return COMMENT;   //Checked
+\/\/[^\n\r]*           return COMMENT;
 
-[a-zA-Z][a-zA-Z0-9]*    return ID;       //Checked
-(0|[1-9][0-9]*)         return NUM;      //Checked
-(0|[1-9][0-9]*)+b       return NUM_B;    //Checked
+[a-zA-Z][a-zA-Z0-9]*    return ID;
+(0|[1-9][0-9]*)         return NUM;
+(0|[1-9][0-9]*)+b       return NUM_B;
 
-\"([^"\\]|\\.)*\"        return STRING;             //Checked
+\"([^"\\]|\\.)*\"        return STRING;
 \"{printable_ascii}*\"   return STRING;
-{whitespace}            ; /* ignore whitespace */
+
+{whitespace}            ;
 .                       return ERR_GENERAL;
 
-\"[^\"]*                return ERR_UNCLOSED_STR;   //Checked
+\"[^\"]*                return ERR_UNCLOSED_STR;
 "([^"\\]*(\\.[^"\\]*)*  return ERR_UNCLOSED_STR;
 
 

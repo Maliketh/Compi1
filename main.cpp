@@ -20,11 +20,11 @@ int convertCharToInt (char c)
 {
     int res = -1;
     if (c >= '0' && c <= '9')
-        res =  (int)(c - '0');
+        res =  static_cast<int> (c - '0');
     else if (c >= 'A' && c <= 'F')
-        res =  (int)(c - 'A' + 10);
+        res =  static_cast<int> (c - 'A' + 10);
     else if (c >= 'a' && c <= 'f')
-        res = (int)(c - 'a' + 10);
+        res = static_cast<int> (c - 'a' + 10);
     return res;
 }
 
@@ -51,7 +51,8 @@ void printString()
         {
             //scream something
         }
-        if (yytext[i] == '\n' || yytext[i] == '\r'  )
+
+        if (yytext[i] == '\n' || yytext[i] == '\r')
         {
             output::errorUnclosedString();
             exit(0);
@@ -63,9 +64,9 @@ void printString()
             exit(0);
             break;
         }
+
         else if (yytext[i] == '\\')
         {
-
             char cur_char = yytext[++i];
 
             switch (cur_char) {
@@ -150,7 +151,9 @@ void printString()
     }
 
     output::printToken(yylineno, STRING, output.c_str());
+
 }
+
 bool isIllegal(char c)
 {
     unsigned char uc = static_cast<unsigned char>(c);
@@ -159,13 +162,6 @@ bool isIllegal(char c)
                      c == '\r' ||
                      c == '\n';
     return !is_legal;
-    /*unsigned char uc = static_cast<unsigned char>(c);
-    return (uc <= 0x09) ||                // \x00-\x09
-           (uc == 0x0b) ||               // \x0b
-           (uc == 0x0c) ||               // \x0c
-           (0x0e <= uc && uc <= 0x1f) || // \x0e-\x1f
-           (uc == 0x7f) ||                 // \x7f (DEL)
-           (uc == 0x40)   ;             // @ symbol*/
 }
 
 void char_error()
