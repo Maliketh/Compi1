@@ -8,6 +8,7 @@
 whitespace           [ \t\n\r]
 
 
+printable_ascii    [\x20-\x7E]
 
 illegal_string      ({string}|{illegal_escape}|{illegal_chars})
 
@@ -46,8 +47,8 @@ continue                return CONTINUE;
 (0|[1-9][0-9]*)         return NUM;      //Checked
 (0|[1-9][0-9]*)+b       return NUM_B;    //Checked
 
-\"[^(\")]*\"              return STRING;             //Checked
-
+\"([^"\\]|\\.)*\"        return STRING;             //Checked
+\"{printable_ascii}*\"   return STRING;
 {whitespace}            ; /* ignore whitespace */
 .                       return ERR_GENERAL;
 
